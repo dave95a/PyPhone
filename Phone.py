@@ -3,7 +3,7 @@ import wx
 from wx import Height, Width
 from unittest import case
 
-telefon=['RursusPhone',0,0,0]
+telefon={'marke':'RursusPhone','Mb':16,'stulen':False}
 class ExamplePanel(wx.Panel):
     def __init__(self, parent, title):
         wx.Panel.__init__(self, parent)
@@ -39,7 +39,7 @@ class ExamplePanel(wx.Panel):
 
         # Checkbox
         self.insure = wx.CheckBox(self, label="Jag säljer inte stöldgods", pos=(5,120))
-        self.Bind(wx.EVT_CHECKBOX, self.EvtCheckBox, self.insure)
+        self.Bind(wx.EVT_CHECKBOX, self.EvtStulenCheckBox, self.insure)
 
         # Radio Boxes
         radioList = ['16Gb', '32Gb', '64Gb','128Gb']
@@ -52,7 +52,7 @@ class ExamplePanel(wx.Panel):
         self.logger.AppendText('EvtRadioBox: %d\n' % val)
         gb=[16,32,64,128][val]
         self.logger.AppendText('  => gb: %d\n' % gb)
-        telefon[1]=gb
+        telefon['Mb']=gb
     def EvtComboBox(self, event):
         self.logger.AppendText('EvtComboBox: %s\n' % event.GetString())
     def OnClick(self,event):
@@ -62,13 +62,17 @@ class ExamplePanel(wx.Panel):
     def EvtMarke(self, event):
         marke=event.GetString()
         self.logger.AppendText('EvtMarke: %s\n' % event.GetString())
-        telefon[0]=marke
+        telefon['marke']=marke
     def EvtChar(self, event):
         self.logger.AppendText('EvtChar: %d\n' % event.GetKeyCode())
         event.Skip()
-    def EvtCheckBox(self, event):
-        self.logger.AppendText('EvtCheckBox: %d\n' % event.Checked())
-
+    def EvtStulenCheckBox(self, event):
+        stulen=event.Checked()
+        telefon['stulen'] = [False, True][stulen]
+        if telefon['stulen']:
+            self.logger.AppendText('EvtStulenCheckBox: just det!\n')
+        else:
+            self.logger.AppendText('EvtStulenCheckBox: ingalunda!!\n')
 
 app = wx.App(False)
 frame = wx.Frame(None)
